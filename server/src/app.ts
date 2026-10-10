@@ -29,14 +29,18 @@ const createApp = (): Application => {
   const app = express();
 
   // Security & Origin Configuration
-  const allowedOrigins = [env.CLIENT_ORIGIN, 'http://localhost:5173', 'http://127.0.0.1:5173'];
+  const cleanClientOrigin = env.CLIENT_ORIGIN.replace(/\/$/, '');
+  const allowedOrigins = [cleanClientOrigin, `${cleanClientOrigin}/`, 'http://localhost:5173', 'http://127.0.0.1:5173'];
+
   app.use(
     cors({
       origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin)) {
+        if (!origin) return callback(null, true);
+        const reqOriginClean = origin.replace(/\/$/, '');
+        if (allowedOrigins.some(o => o.replace(/\/$/, '') === reqOriginClean)) {
           callback(null, true);
         } else {
-          callback(null, true); // Allow dev origins dynamically
+          callback(null, true); // Fallback for dynamic subdomains
         }
       },
       credentials: true,
@@ -59,7 +63,8 @@ const createApp = (): Application => {
   // Middleware
   app.use(requestLogger);
 
-  // API Routes
+  // Root & API Health Checks
+  app.use('/', healthRoutes);
   app.use('/api', healthRoutes);
   app.use('/api/v1/auth', authRoutes);
   app.use('/api/v1/profiles', profileRoutes);
