@@ -1,0 +1,20 @@
+{
+  "name": "kampus-vc",
+  "version": "1.0.0",
+  "description": "Kampus.VC - AI-Powered Creator Marketplace Connecting AI Artists, Filmmakers & Designers with Brands",
+  "private": true,
+  "scripts": {
+    "setup": "cmd /c npm install && npm --prefix client install && npm --prefix server install",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:frontend": "npm --prefix client run dev",
+    "dev:backend": "npm --prefix server run dev",
+    "build": "npm --prefix client run build && npm --prefix server run build",
+    "build:frontend": "npm --prefix client run build",
+    "build:backend": "npm --prefix server run build",
+    "test": "npm --prefix server run test",
+    "lint": "npm --prefix client run lint && npm --prefix server run lint"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
