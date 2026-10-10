@@ -35,7 +35,8 @@ export const connectDatabase = async (): Promise<boolean> => {
   try {
     mongoose.set('strictQuery', true);
     await mongoose.connect(env.MONGODB_URI, {
-      serverSelectionTimeoutMS: 3000, // Quick timeout so backend starts without hanging if Mongo is not running
+      serverSelectionTimeoutMS: 8000,
+      retryWrites: true,
     });
     console.log(`✅ MongoDB Connected: ${mongoose.connection.host}/${mongoose.connection.name}`);
     return true;
